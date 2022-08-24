@@ -1,6 +1,7 @@
 package main
 
 import (
+	"game/pkg/sgame"
 	tl "github.com/JoelOtter/termloop"
 )
 
@@ -22,13 +23,6 @@ type logFn func(log string, items ...interface{})
 
 var glog logFn
 
-const (
-	L byte = 'L'
-	R byte = 'R'
-	U byte = 'U'
-	D byte = 'D'
-)
-
 func main() {
 	game := tl.NewGame()
 	game.SetDebugOn(true)
@@ -40,27 +34,20 @@ func main() {
 		Ch: '~',
 	})
 
-	player := Player{
-		Entity: tl.NewEntity(30, 15, 4, 1),
-		level:  level,
-		prevX:  30,
-		prevY:  15,
-		pervO:  R,
-		currO:  R,
-	}
+	shp := sgame.NewShip(30, 15, sgame.OriR, sgame.FourMast)
 
 	// Set the character at position (0, 0) on the entity.
-	//player.SetCell(0, 0, &tl.Cell{Fg: tl.ColorWhite, Bg: tl.RgbTo256Color(100, 150, 200), Ch: '*'}) //옷
-	player.Fill(&tl.Cell{Fg: tl.ColorRed, Bg: tl.RgbTo256Color(130, 130, 130), Ch: ' '})
-	level.AddEntity(&player)
-	//Your sea
+	// shp.SetCell(0, 0, &tl.Cell{Fg: tl.ColorWhite, Bg: tl.RgbTo256Color(100, 150, 200), Ch: '*'}) //옷
+	shp.Fill(&tl.Cell{Fg: tl.ColorRed, Bg: tl.RgbTo256Color(130, 130, 130), Ch: ' '})
+	level.AddEntity(shp)
+	// Your sea
 	level.AddEntity(tl.NewText(30, 10, "Your Fleet", tl.ColorGreen, tl.ColorBlue))
 	level.AddEntity(tl.NewText(10, 18, "Ships Left: 10", tl.ColorGreen, tl.ColorBlue))
 	level.AddEntity(tl.NewRectangle(30, 14, 10, 1, tl.ColorBlack))
 	level.AddEntity(tl.NewRectangle(29, 14, 1, 11, tl.ColorBlack))
 	level.AddEntity(tl.NewRectangle(29, 25, 12, 1, tl.ColorBlack))
 	level.AddEntity(tl.NewRectangle(40, 14, 1, 11, tl.ColorBlack))
-	//Coordinates
+	// Coordinates
 	level.AddEntity(tl.NewText(30, 13, "ABCDEFGHIJ", tl.ColorWhite, tl.ColorBlue))
 	level.AddEntity(tl.NewText(28, 15, "1", tl.ColorWhite, tl.ColorBlue))
 	level.AddEntity(tl.NewText(28, 16, "2", tl.ColorWhite, tl.ColorBlue))
@@ -72,26 +59,26 @@ func main() {
 	level.AddEntity(tl.NewText(28, 22, "8", tl.ColorWhite, tl.ColorBlue))
 	level.AddEntity(tl.NewText(28, 23, "9", tl.ColorWhite, tl.ColorBlue))
 	level.AddEntity(tl.NewText(28, 24, "0", tl.ColorWhite, tl.ColorBlue))
-	//Task design
+	// Task design
 	level.AddEntity(tl.NewRectangle(44, 18, 18, 1, tl.ColorBlack))
 	level.AddEntity(tl.NewRectangle(44, 19, 1, 2, tl.ColorBlack))
 	level.AddEntity(tl.NewRectangle(44, 21, 18, 1, tl.ColorBlack))
 	level.AddEntity(tl.NewRectangle(61, 19, 1, 2, tl.ColorBlack))
 	level.AddEntity(tl.NewRectangle(45, 19, 3, 1, tl.ColorBlue))
 	level.AddEntity(tl.NewRectangle(58, 19, 3, 1, tl.ColorBlue))
-	//Task notifier
+	// Task notifier
 	level.AddEntity(tl.NewText(47, 13, "Choose a cell", tl.ColorWhite, tl.ColorBlue))
 	level.AddEntity(tl.NewText(45, 14, "you want to shoot", tl.ColorWhite, tl.ColorBlue))
 	level.AddEntity(tl.NewText(48, 19, "Objective:", tl.RgbTo256Color(17, 216, 220), tl.ColorBlue))
 	level.AddEntity(tl.NewText(45, 20, "Sink enemy ships", tl.RgbTo256Color(17, 216, 220), tl.ColorBlue))
-	//Enemy sea
+	// Enemy sea
 	level.AddEntity(tl.NewText(66, 10, "Enemy Fleet", tl.ColorRed, tl.ColorBlue))
 	level.AddEntity(tl.NewText(83, 18, "Ships Left: 10", tl.ColorRed, tl.ColorBlue))
 	level.AddEntity(tl.NewRectangle(66, 14, 10, 1, tl.ColorBlack))
 	level.AddEntity(tl.NewRectangle(65, 14, 1, 11, tl.ColorBlack))
 	level.AddEntity(tl.NewRectangle(65, 25, 12, 1, tl.ColorBlack))
 	level.AddEntity(tl.NewRectangle(76, 14, 1, 11, tl.ColorBlack))
-	//Coordinates
+	// Coordinates
 	level.AddEntity(tl.NewText(66, 13, "ABCDEFGHIJ", tl.ColorWhite, tl.ColorBlue))
 	level.AddEntity(tl.NewText(64, 15, "1", tl.ColorWhite, tl.ColorBlue))
 	level.AddEntity(tl.NewText(64, 16, "2", tl.ColorWhite, tl.ColorBlue))
@@ -103,9 +90,9 @@ func main() {
 	level.AddEntity(tl.NewText(64, 22, "8", tl.ColorWhite, tl.ColorBlue))
 	level.AddEntity(tl.NewText(64, 23, "9", tl.ColorWhite, tl.ColorBlue))
 	level.AddEntity(tl.NewText(64, 24, "0", tl.ColorWhite, tl.ColorBlue))
-	//Game start
-	//fmt.Scan("Type X", &a)
-	//fmt.Scan("Type Y", &b)
+	// Game start
+	// fmt.Scan("Type X", &a)
+	// fmt.Scan("Type Y", &b)
 	level.Offset()
 	game.Screen().SetLevel(level)
 	game.Start()
@@ -121,10 +108,10 @@ type Player struct {
 }
 
 func (player *Player) Draw(screen *tl.Screen) {
-	//screenWidth, screenHeight := screen.Size()
-	//x, y := player.Position()
-	//player.level.SetOffset(screenWidth/2-x, screenHeight/2-y)
-	//We need to make sure and call Draw on the underlying Entity.
+	// screenWidth, screenHeight := screen.ShipSize()
+	// x, y := player.Position()
+	// player.level.SetOffset(screenWidth/2-x, screenHeight/2-y)
+	// We need to make sure and call Draw on the underlying Entity.
 	player.Entity.Draw(screen)
 }
 
@@ -135,9 +122,9 @@ func (player *Player) Tick(event tl.Event) {
 		case tl.KeyF2:
 			player.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: ' '})
 		case tl.KeyPgdn:
-			//tl.NewEntity(player.prevX, player.prevY, 1, 4)
-			//canvas := tl.NewCanvas(2, 5)
-			//player.SetCanvas(&canvas)
+			// tl.NewEntity(player.prevX, player.prevY, 1, 4)
+			// canvas := tl.NewCanvas(2, 5)
+			// player.SetCanvas(&canvas)
 
 			player.Entity = tl.NewEntity(player.prevX, player.prevY, 1, 4)
 			player.Fill(&tl.Cell{Fg: tl.ColorRed, Bg: tl.RgbTo256Color(130, 130, 130), Ch: ' '})
@@ -151,19 +138,19 @@ func (player *Player) Tick(event tl.Event) {
 			player.currO = 'R'
 		case tl.KeyEnter:
 
-		//case tl.KeyF2:
+		// case tl.KeyF2:
 		//	player.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: '옷'})
-		//case tl.KeyF3:
+		// case tl.KeyF3:
 		//	player.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 0, 0), Ch: '옷'})
-		//case tl.KeyF4:
+		// case tl.KeyF4:
 		//	player.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(0, 255, 0), Ch: '옷'})
-		//case tl.KeyF5:
+		// case tl.KeyF5:
 		//	player.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(0, 0, 255), Ch: '옷'})
-		//case tl.KeyF6:
+		// case tl.KeyF6:
 		//	player.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 0, 255), Ch: '옷'})
-		//case tl.KeyF7:
+		// case tl.KeyF7:
 		//	player.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(0, 255, 255), Ch: '옷'})
-		//case tl.KeyF8:
+		// case tl.KeyF8:
 		//	player.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 0), Ch: '옷'})
 		case tl.KeySpace:
 			player.SetPosition(player.prevX, player.prevY-5)
@@ -188,6 +175,6 @@ func (player *Player) Collide(collision tl.Physical) {
 
 }
 
-//func (player *Player) Orient()  {
+// func (player *Player) Orient()  {
 //	if
-//}
+// }
