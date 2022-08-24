@@ -11,7 +11,8 @@ func main() {
 	game.SetDebugOn(true)
 	sgame.Glog = game.Log
 
-	shp := sgame.NewShip(30, 15, sgame.OriD, sgame.FourMast)
+	shpL := sgame.NewShip(60, 15, sgame.OriL, sgame.FourMast)
+
 	oceMe := sgame.NewOcean(8, 14)
 	oceOp := sgame.NewOcean(50, 14)
 
@@ -23,7 +24,7 @@ func main() {
 
 	level.AddEntity(oceMe)
 	level.AddEntity(oceOp)
-	level.AddEntity(shp)
+	level.AddEntity(shpL)
 
 	game.Screen().SetLevel(level)
 	game.Start()

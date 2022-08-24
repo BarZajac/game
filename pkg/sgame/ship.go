@@ -1,6 +1,8 @@
 package sgame
 
 import (
+	"bytes"
+
 	tl "github.com/JoelOtter/termloop"
 )
 
@@ -63,7 +65,7 @@ func (shp *Ship) Draw(s *tl.Screen) {
 			s.RenderCell(shp.currX+i, shp.currY, c)
 
 		case OriL:
-			s.RenderCell(shp.currX-1, shp.currY, c)
+			s.RenderCell(shp.currX-i, shp.currY, c)
 
 		case OriU:
 			s.RenderCell(shp.currX, shp.currY-i, c)
@@ -75,32 +77,21 @@ func (shp *Ship) Draw(s *tl.Screen) {
 }
 
 func (shp *Ship) Tick(event tl.Event) {
-
 	if event.Type == tl.EventKey { // Is it a keyboard event?
 		shp.prevX = shp.currX
 		shp.prevY = shp.currY
 		shp.prevOri = shp.currOri
 
-		switch event.Key { // If so, switch on the pressed key.
+		switch event.Key {
 		case tl.KeyF2:
-			// shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: '*'})
-		case tl.KeyPgdn:
-			// tl.NewEntity(shp.prevX, shp.prevY, 1, 4)
-			// canvas := tl.NewCanvas(2, 5)
-			// shp.SetCanvas(&canvas)
 
-			// shp.Entity = tl.NewEntity(shp.prevX, shp.prevY, 1, 4)
-			// shp.Fill(&tl.Cell{Fg: tl.ColorRed, Bg: tl.RgbTo256Color(130, 130, 130), Ch: ' '})
-			// shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: 'x'})
-			// shp.prevOri = 'R'
-			// shp.currOri = 'D'
+		case tl.KeyPgdn:
+
+			shp.currOri = nextOri(shp.currOri, true)
 
 		case tl.KeyPgup:
-			// shp.Entity = tl.NewEntity(shp.prevX, shp.prevY, 4, 1)
-			// shp.Fill(&tl.Cell{Fg: tl.ColorRed, Bg: tl.RgbTo256Color(130, 130, 130), Ch: ' '})
-			// shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: 'x'})
-			// shp.prevOri = 'D'
-			// shp.currOri = 'R'
+			shp.currOri = nextOri(shp.currOri, false)
+
 		case tl.KeySpace:
 
 		case tl.KeyArrowRight:
@@ -126,4 +117,40 @@ func (shp *Ship) Collide(collision tl.Physical) {
 		shp.currY = shp.prevY
 	}
 
+}
+
+var s = []byte{'U', 'R', 'D', 'L'}
+
+func nextOri(cur Orientation, dir bool) Orientation {
+
+	i := bytes.IndexByte(s, byte(cur))
+	if i == -1 {
+		return cur
+	}
+
+	if dir {
+		// Clockwise.
+		switch {
+		case i == 0:
+			return OriR
+
+		case i == 3:
+			return OriU
+
+		default:
+			return Orientation(s[i+1])
+		}
+	} else {
+		// Counterclockwise.
+		switch {
+		case i == 0:
+			return OriL
+
+		case i == 3:
+			return OriD
+
+		default:
+			return Orientation(s[i-1])
+		}
+	}
 }
