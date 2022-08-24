@@ -57,29 +57,21 @@ func (shp *Ship) Draw(s *tl.Screen) {
 		Ch: ' ',
 	}
 
-	switch shp.currOri {
-	case OriR:
-		for i := 0; i < int(shp.size); i++ {
+	for i := 0; i < int(shp.size); i++ {
+		switch shp.currOri {
+		case OriR:
 			s.RenderCell(shp.currX+i, shp.currY, c)
-		}
 
-	case OriL:
-		for i := 0; i < int(shp.size); i++ {
+		case OriL:
 			s.RenderCell(shp.currX-1, shp.currY, c)
-		}
 
-	case OriU:
-		for i := 0; i < int(shp.size); i++ {
+		case OriU:
 			s.RenderCell(shp.currX, shp.currY-i, c)
-		}
 
-	case OriD:
-		for i := 0; i < int(shp.size); i++ {
+		case OriD:
 			s.RenderCell(shp.currX, shp.currY+i, c)
 		}
-
 	}
-
 }
 
 func (shp *Ship) Tick(event tl.Event) {
