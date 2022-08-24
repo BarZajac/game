@@ -7,8 +7,11 @@ import (
 
 func main() {
 	game := tl.NewGame()
+	// game.DebugOn()
+	game.SetDebugOn(true)
+	sgame.Glog = game.Log
 
-	shp := sgame.NewShip(30, 15, sgame.OriR, sgame.FourMast)
+	shp := sgame.NewShip(30, 15, sgame.OriD, sgame.FourMast)
 	oceMe := sgame.NewOcean(8, 14)
 	oceOp := sgame.NewOcean(50, 14)
 
