@@ -9,8 +9,8 @@ func main() {
 	game := tl.NewGame()
 
 	shp := sgame.NewShip(30, 15, sgame.OriR, sgame.FourMast)
-	// oceMe := sgame.NewOcean(8, 14)
-	// oceOp := sgame.NewOcean(50, 14)
+	oceMe := sgame.NewOcean(8, 14)
+	oceOp := sgame.NewOcean(50, 14)
 
 	level := tl.NewBaseLevel(tl.Cell{
 		Bg: tl.ColorBlack,
@@ -18,8 +18,8 @@ func main() {
 		Ch: ' ',
 	})
 
-	// level.AddEntity(oceMe)
-	// level.AddEntity(oceOp)
+	level.AddEntity(oceMe)
+	level.AddEntity(oceOp)
 	level.AddEntity(shp)
 
 	game.Screen().SetLevel(level)

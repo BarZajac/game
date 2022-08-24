@@ -32,7 +32,7 @@ type Ship struct {
 	prevX   int
 	prevY   int
 	currOri Orientation
-	pervOri Orientation
+	prevOri Orientation
 }
 
 // NewShip  returns new instance of a Ship.
@@ -42,7 +42,7 @@ func NewShip(x, y int, ori Orientation, s ShipSize) *Ship {
 		size:    s,
 		prevX:   x,
 		prevY:   y,
-		pervOri: ori,
+		prevOri: ori,
 		currOri: ori,
 	}
 	return shp
@@ -67,7 +67,7 @@ func (shp *Ship) Tick(event tl.Event) {
 		shp.prevX, shp.prevY = shp.Position()
 		switch event.Key { // If so, switch on the pressed key.
 		case tl.KeyF2:
-			shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: ' '})
+			shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: '*'})
 		case tl.KeyPgdn:
 			// tl.NewEntity(shp.prevX, shp.prevY, 1, 4)
 			// canvas := tl.NewCanvas(2, 5)
@@ -75,30 +75,16 @@ func (shp *Ship) Tick(event tl.Event) {
 
 			shp.Entity = tl.NewEntity(shp.prevX, shp.prevY, 1, 4)
 			shp.Fill(&tl.Cell{Fg: tl.ColorRed, Bg: tl.RgbTo256Color(130, 130, 130), Ch: ' '})
-			shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: 'x'})
+			//shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: 'x'})
+			shp.prevOri = 'R'
 			shp.currOri = 'D'
 
 		case tl.KeyPgup:
 			shp.Entity = tl.NewEntity(shp.prevX, shp.prevY, 4, 1)
 			shp.Fill(&tl.Cell{Fg: tl.ColorRed, Bg: tl.RgbTo256Color(130, 130, 130), Ch: ' '})
 			shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: 'x'})
+			shp.prevOri = 'D'
 			shp.currOri = 'R'
-		case tl.KeyEnter:
-
-		// case tl.KeyF2:
-		//	shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: '옷'})
-		// case tl.KeyF3:
-		//	shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 0, 0), Ch: '옷'})
-		// case tl.KeyF4:
-		//	shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(0, 255, 0), Ch: '옷'})
-		// case tl.KeyF5:
-		//	shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(0, 0, 255), Ch: '옷'})
-		// case tl.KeyF6:
-		//	shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 0, 255), Ch: '옷'})
-		// case tl.KeyF7:
-		//	shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(0, 255, 255), Ch: '옷'})
-		// case tl.KeyF8:
-		//	shp.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 0), Ch: '옷'})
 		case tl.KeySpace:
 			shp.SetPosition(shp.prevX, shp.prevY-5)
 		case tl.KeyArrowRight:

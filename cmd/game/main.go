@@ -120,7 +120,7 @@ func (player *Player) Tick(event tl.Event) {
 		player.prevX, player.prevY = player.Position()
 		switch event.Key { // If so, switch on the pressed key.
 		case tl.KeyF2:
-			player.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: ' '})
+			player.SetCell(0, 0, &tl.Cell{Fg: tl.RgbTo256Color(255, 255, 255), Ch: 'x'})
 		case tl.KeyPgdn:
 			// tl.NewEntity(player.prevX, player.prevY, 1, 4)
 			// canvas := tl.NewCanvas(2, 5)
