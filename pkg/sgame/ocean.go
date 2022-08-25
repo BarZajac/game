@@ -22,8 +22,8 @@ func NewOcean(x, y int) *Ocean {
 }
 
 func (o *Ocean) Draw(s *tl.Screen) {
-	txtTop := NewText(o.x, o.y, " 012345789", OriR, tl.ColorWhite, frameCol)
-	right := tl.NewRectangle(o.x+OceanSize, o.y, 1, OceanSize+2, frameCol)
+	txtTop := NewText(o.x, o.y, " 0123456789", OriR, tl.ColorWhite, frameCol)
+	right := tl.NewRectangle(o.x+OceanSize+1, o.y, 1, OceanSize+2, tl.ColorBlue)
 	bottom := tl.NewRectangle(o.x, o.y+OceanSize+1, OceanSize+1, 1, frameCol)
 	txtLeft := NewText(o.x, o.y+1, "ABCDEFGHIJ", OriD, tl.ColorWhite, frameCol)
 
