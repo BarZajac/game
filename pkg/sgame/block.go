@@ -250,13 +250,32 @@ func (blk *Block) IsSolid() bool {
 }
 
 func (blk *Block) Collide(collision tl.Physical) {
-	// Check if it's a Rectangle we're colliding with
-	Glog("%+v %T %+v", collision, collision, collision)
-	if _, ok := collision.(*tl.Rectangle); ok {
-		blk.x = blk.prevX
-		blk.y = blk.prevY
-		blk.ori = blk.prevOri
+	if !blk.solid {
+		return
 	}
+
+	bp1x, bp1y, bp2x, bp2y := blk.Definition()
+
+	// Check if it's a Rectangle we're colliding with
+	if o, ok := collision.(*Ocean); ok {
+		op1x, op1y, op2x, op2y := o.Definition()
+
+		// if !IsInside(op1x, op1y, op2x, op2y, bp1x, bp1y)  ||
+		// 	!IsInside(op1x, op1y, op2x, op2y, bp2x, bp2y) {
+		// ...
+		// 	}
+
+		if IsInside(op1x, op1y, op2x, op2y, bp1x, bp1y) == false ||
+			IsInside(op1x, op1y, op2x, op2y, bp2x, bp2y) == false {
+			blk.x = blk.prevX
+			blk.y = blk.prevY
+			blk.ori = blk.prevOri
+		}
+	}
+}
+
+func (blk *Block) Definition() (int, int, int, int) {
+	return 0, 0, 0, 0
 }
 
 // nextOri returns orientation after rotating left or right from current one.
@@ -276,4 +295,8 @@ func nextOri(cur Orientation, dir RotDir) Orientation {
 	}
 
 	return Orientation(orientations[next])
+}
+
+func IsInside(p1x, p1y, p2x, p2y, p3x, p3y int) bool {
+	return false
 }

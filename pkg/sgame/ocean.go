@@ -13,6 +13,14 @@ type Ocean struct {
 	y int
 }
 
+func (o *Ocean) Position() (int, int) {
+	return o.x, o.y
+}
+
+func (o *Ocean) Size() (int, int) {
+	return OceanSize + 2, OceanSize + 2
+}
+
 func NewOcean(x, y int) *Ocean {
 	o := &Ocean{
 		x: x,
@@ -34,3 +42,7 @@ func (o *Ocean) Draw(s *tl.Screen) {
 }
 
 func (o *Ocean) Tick(_ tl.Event) {}
+
+func (o *Ocean) Definition() (int, int, int, int) {
+	return o.x, o.y, o.x + OceanSize, o.y + OceanSize
+}
