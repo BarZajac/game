@@ -275,7 +275,8 @@ func (blk *Block) Collide(collision tl.Physical) {
 }
 
 func (blk *Block) Definition() (int, int, int, int) {
-	return 0, 0, 0, 0
+	w, h := blk.Size()
+	return blk.x, blk.y, blk.x + w, blk.y + h
 }
 
 // nextOri returns orientation after rotating left or right from current one.
@@ -298,5 +299,12 @@ func nextOri(cur Orientation, dir RotDir) Orientation {
 }
 
 func IsInside(p1x, p1y, p2x, p2y, p3x, p3y int) bool {
+	if p3x > p1x && p3x < p1y {
+		return true
+	}
+	if p3y > p2x && p3y < p2y {
+		return true
+	}
+
 	return false
 }
