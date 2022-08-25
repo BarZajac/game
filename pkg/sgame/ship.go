@@ -77,25 +77,26 @@ func (shp *Ship) Draw(s *tl.Screen) {
 		Ch: ' ',
 	}
 
+	newX, newY := shp.currX, shp.currY
 	for i := 0; i < int(shp.size); i++ {
 		switch shp.currOri {
 		case OriR:
-			s.RenderCell(shp.currX+i, shp.currY, c)
-
+			newX, newY = shp.currX+i, shp.currY
 		case OriL:
-			s.RenderCell(shp.currX-i, shp.currY, c)
-
+			newX, newY = shp.currX-i, shp.currY
 		case OriU:
-			s.RenderCell(shp.currX, shp.currY-i, c)
-
+			newX, newY = shp.currX, shp.currY-i
 		case OriD:
-			s.RenderCell(shp.currX, shp.currY+i, c)
+			newX, newY = shp.currX, shp.currY+i
 		}
+
+		s.RenderCell(newX, newY, c)
 	}
 }
 
 func (shp *Ship) Tick(event tl.Event) {
-	if event.Type == tl.EventKey { // Is it a keyboard event?
+	// Is it a keyboard event?
+	if event.Type == tl.EventKey {
 		shp.prevX = shp.currX
 		shp.prevY = shp.currY
 		shp.prevOri = shp.currOri
@@ -128,7 +129,6 @@ func (shp *Ship) Tick(event tl.Event) {
 
 func (shp *Ship) Collide(collision tl.Physical) {
 	// Check if it's a Rectangle we're colliding with
-	// glog("%+v %T %+v", collision, collision, shp)
 	if _, ok := collision.(*tl.Rectangle); ok {
 		shp.currX = shp.prevX
 		shp.currY = shp.prevY
