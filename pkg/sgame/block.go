@@ -57,6 +57,7 @@ type Block struct {
 	text    []rune
 	canvas  []tl.Cell
 	locked  bool
+	solid   bool
 }
 
 // NewShip  returns new instance of a Ship.
@@ -81,6 +82,7 @@ func NewShip(x, y int, ori Orientation, size ShipSize) *Block {
 		prevOri: ori,
 		text:    str,
 		canvas:  c,
+		solid:   true,
 	}
 }
 
@@ -102,6 +104,7 @@ func NewText(x, y int, text string, ori Orientation, fg, bg tl.Attr) *Block {
 		text:    str,
 		canvas:  c,
 		locked:  true,
+		solid:   true,
 	}
 }
 
@@ -124,6 +127,7 @@ func NewBar(x, y, width int, ori Orientation, fg, bg tl.Attr) *Block {
 		text:    str,
 		canvas:  c,
 		locked:  true,
+		solid:   true,
 	}
 }
 
@@ -137,6 +141,7 @@ func (blk *Block) Tick(ev tl.Event) {
 		blk.prevY = blk.y
 		blk.prevOri = blk.ori
 
+		x, y := blk.x, blk.y
 		switch ev.Key {
 		case tl.KeyF2:
 
@@ -149,22 +154,24 @@ func (blk *Block) Tick(ev tl.Event) {
 		case tl.KeySpace:
 
 		case tl.KeyArrowRight:
-			blk.x += 1
+			x += 1
 
 		case tl.KeyArrowLeft:
-			blk.x -= 1
+			x -= 1
 
 		case tl.KeyArrowUp:
-			blk.y -= 1
+			y -= 1
 
 		case tl.KeyArrowDown:
-			blk.y += 1
+			y += 1
 		}
+
+		blk.SetPosition(x, y)
 	}
 }
 
 func (blk *Block) Draw(s *tl.Screen) {
-	w, _ := blk.Size()
+	w := len(blk.text)
 	newX, newY := blk.x, blk.y
 
 	for i := 0; i < w; i++ {
@@ -191,7 +198,20 @@ func (blk *Block) Position() (int, int) {
 }
 
 func (blk *Block) Size() (int, int) {
-	return len(blk.text), 1
+	var w, h int
+	switch blk.ori {
+	case OriU:
+
+	case OriR:
+		w, h = len(blk.text), 1
+
+	case OriD:
+		w, h = 1, len(blk.text)
+
+	case OriL:
+	}
+
+	return w, h
 }
 
 func (blk *Block) SetPosition(x, y int) {
@@ -225,13 +245,19 @@ func (blk *Block) SetColor(fg, bg tl.Attr) {
 	}
 }
 
-// func (shp *Ship) Collide(collision tl.Physical) {
-// 	// Check if it's a Rectangle we're colliding with
-// 	if _, ok := collision.(*tl.Rectangle); ok {
-// 		shp.currX = shp.prevX
-// 		shp.currY = shp.prevY
-// 	}
-// }
+func (blk *Block) IsSolid() bool {
+	return blk.solid
+}
+
+func (blk *Block) Collide(collision tl.Physical) {
+	// Check if it's a Rectangle we're colliding with
+	Glog("%+v %T %+v", collision, collision, collision)
+	if _, ok := collision.(*tl.Rectangle); ok {
+		blk.x = blk.prevX
+		blk.y = blk.prevY
+		blk.ori = blk.prevOri
+	}
+}
 
 // nextOri returns orientation after rotating left or right from current one.
 func nextOri(cur Orientation, dir RotDir) Orientation {
