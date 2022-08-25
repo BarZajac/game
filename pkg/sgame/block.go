@@ -1,8 +1,6 @@
 package sgame
 
 import (
-	"bytes"
-
 	tl "github.com/JoelOtter/termloop"
 )
 
@@ -22,19 +20,9 @@ type Orientation byte
 
 // orientations
 const (
-	OriU Orientation = 'U' // Up from anchor point.
 	OriR Orientation = 'R' // Right from anchor point.
 	OriD Orientation = 'D' // Down from anchor point.
-	OriL Orientation = 'L' // Left from anchor point.
 )
-
-// orientations represents all valid orientations of a ship.
-var orientations = [4]byte{
-	byte(OriU),
-	byte(OriR),
-	byte(OriD),
-	byte(OriL),
-}
 
 // RotDir represents rotation direction.
 type RotDir int
@@ -146,14 +134,17 @@ func (blk *Block) Tick(ev tl.Event) {
 		blk.prevOri = blk.ori
 
 		x, y := blk.x, blk.y
+		ori := blk.ori
 		switch ev.Key {
 		case tl.KeyF2:
 
 		case tl.KeyPgdn:
-			blk.ori = nextOri(blk.ori, RotR)
+			w, h := blk.Size()
+			x, y, ori = nextOri(blk.x, blk.y, w, h, RotR)
 
 		case tl.KeyPgup:
-			blk.ori = nextOri(blk.ori, RotL)
+			w, h := blk.Size()
+			x, y, ori = nextOri(blk.x, blk.y, w, h, RotL)
 
 		case tl.KeySpace:
 
@@ -170,7 +161,9 @@ func (blk *Block) Tick(ev tl.Event) {
 			y += 1
 		}
 
-		blk.SetPosition(x, y)
+		blk.x = x
+		blk.y = y
+		blk.ori = ori
 	}
 }
 
@@ -180,17 +173,11 @@ func (blk *Block) Draw(s *tl.Screen) {
 
 	for i := 0; i < w; i++ {
 		switch blk.ori {
-		case OriU:
-			newX, newY = blk.x, blk.y-i
-
 		case OriR:
 			newX, newY = blk.x+i, blk.y
 
 		case OriD:
 			newX, newY = blk.x, blk.y+i
-
-		case OriL:
-			newX, newY = blk.x-i, blk.y
 		}
 
 		s.RenderCell(newX, newY, &blk.canvas[i])
@@ -204,17 +191,11 @@ func (blk *Block) Position() (int, int) {
 func (blk *Block) Size() (int, int) {
 	var w, h int
 	switch blk.ori {
-	case OriU:
-		w, h = 1, -len(blk.text)
-
 	case OriR:
 		w, h = len(blk.text), 1
 
 	case OriD:
 		w, h = 1, len(blk.text)
-
-	case OriL:
-		w, h = -len(blk.text), 1
 	}
 
 	return w, h
@@ -285,39 +266,18 @@ func (blk *Block) Definition() (int, int, int, int) {
 
 	var p1x, p1y, p2x, p2y int
 	switch blk.ori {
-	case OriU:
-		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w-1, blk.y+h
-
 	case OriR:
 		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w, blk.y+h-1
 
 	case OriD:
 		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w-1, blk.y+h
-
-	case OriL:
-		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w+1, blk.y+h-1
 	}
 
 	return p1x, p1y, p2x, p2y
 }
 
-// nextOri returns orientation after rotating left or right from current one.
-func nextOri(cur Orientation, dir RotDir) Orientation {
-	i := bytes.IndexByte(orientations[:], byte(cur))
-	if i == -1 {
-		return cur
-	}
-
-	next := i + int(dir)
-	if next == len(orientations) {
-		next = 0
-	}
-
-	if next == -1 {
-		next = len(orientations) - 1
-	}
-
-	return Orientation(orientations[next])
+func nextOri(px, py, w, h int, dir RotDir) (int, int, Orientation) {
+	return 0, 0, OriR
 }
 
 func IsInside(p1x, p1y, p2x, p2y, p3x, p3y int) bool {
