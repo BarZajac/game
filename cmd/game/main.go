@@ -35,10 +35,10 @@ func main() {
 	game.SetDebugOn(true)
 	sgame.Glog = game.Log
 
-	oceMe := sgame.NewOcean(8, 14)
+	oceMe := sgame.NewOcean(0, 0)
 	oceOp := sgame.NewOcean(50, 14)
 
-	shpL := sgame.NewShip(60, 15, sgame.OriL, sgame.FourMast)
+	shpL := sgame.NewShip(5, 4, sgame.OriU, sgame.FourMast)
 
 	level := tl.NewBaseLevel(tl.Cell{
 		Bg: tl.ColorBlack,

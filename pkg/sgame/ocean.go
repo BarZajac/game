@@ -44,5 +44,5 @@ func (o *Ocean) Draw(s *tl.Screen) {
 func (o *Ocean) Tick(_ tl.Event) {}
 
 func (o *Ocean) Definition() (int, int, int, int) {
-	return o.x, o.y, o.x + OceanSize, o.y + OceanSize
+	return o.x, o.y, o.x + OceanSize + 1, o.y + OceanSize + 1
 }

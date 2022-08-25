@@ -69,7 +69,11 @@ func NewShip(x, y int, ori Orientation, size ShipSize) *Block {
 	c := make([]tl.Cell, int(size))
 	for i := range c {
 		str[i] = ' '
-		c[i] = tl.Cell{Ch: ' ', Fg: fg, Bg: bg}
+		if i == 0 {
+			str[i] = '*'
+		}
+
+		c[i] = tl.Cell{Ch: str[i], Fg: fg, Bg: bg}
 	}
 	return &Block{
 		x:       x,
@@ -201,6 +205,7 @@ func (blk *Block) Size() (int, int) {
 	var w, h int
 	switch blk.ori {
 	case OriU:
+		w, h = 1, -len(blk.text)
 
 	case OriR:
 		w, h = len(blk.text), 1
@@ -209,6 +214,7 @@ func (blk *Block) Size() (int, int) {
 		w, h = 1, len(blk.text)
 
 	case OriL:
+		w, h = -len(blk.text), 1
 	}
 
 	return w, h
@@ -276,7 +282,23 @@ func (blk *Block) Collide(collision tl.Physical) {
 
 func (blk *Block) Definition() (int, int, int, int) {
 	w, h := blk.Size()
-	return blk.x, blk.y, blk.x + w, blk.y + h
+
+	var p1x, p1y, p2x, p2y int
+	switch blk.ori {
+	case OriU:
+		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w-1, blk.y+h
+
+	case OriR:
+		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w, blk.y+h-1
+
+	case OriD:
+		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w-1, blk.y+h
+
+	case OriL:
+		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w+1, blk.y+h-1
+	}
+
+	return p1x, p1y, p2x, p2y
 }
 
 // nextOri returns orientation after rotating left or right from current one.
@@ -299,12 +321,8 @@ func nextOri(cur Orientation, dir RotDir) Orientation {
 }
 
 func IsInside(p1x, p1y, p2x, p2y, p3x, p3y int) bool {
-	if p3x > p1x && p3x < p1y {
+	if p1x < p3x && p2x > p3x && p1y < p3y && p2y > p3y {
 		return true
 	}
-	if p3y > p2x && p3y < p2y {
-		return true
-	}
-
 	return false
 }
