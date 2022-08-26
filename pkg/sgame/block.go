@@ -1,6 +1,8 @@
 package sgame
 
 import (
+	"strconv"
+
 	tl "github.com/JoelOtter/termloop"
 )
 
@@ -57,9 +59,10 @@ func NewShip(x, y int, ori Orientation, size ShipSize) *Block {
 	str := make([]rune, int(size))
 	c := make([]tl.Cell, int(size))
 	for i := range c {
-		str[i] = ' '
 		if i == 0 {
 			str[i] = '*'
+		} else {
+			str[i] = rune(strconv.Itoa(i + 1)[0])
 		}
 
 		c[i] = tl.Cell{Ch: str[i], Fg: fg, Bg: bg}

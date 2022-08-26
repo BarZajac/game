@@ -36,8 +36,12 @@ func main() {
 	sgame.Glog = game.Log
 
 	oceMe := sgame.NewOcean(10, 14)
-	oceOp := sgame.NewOcean(50, 14)
-	shpInf := sgame.NewTable(70, 15, oceMe)
+	// oceOp := sgame.NewOcean(30, 14)
+
+	shpInf := sgame.NewTable(50, 14, oceMe)
+
+	sm := sgame.NewSetupMgr(oceMe, shpInf)
+	og := sgame.NewGame(sm)
 
 	level := tl.NewBaseLevel(tl.Cell{
 		Bg: tl.ColorBlack,
@@ -45,9 +49,11 @@ func main() {
 		Ch: ' ',
 	})
 
-	level.AddEntity(oceMe)
-	level.AddEntity(oceOp)
-	level.AddEntity(shpInf)
+	level.AddEntity(og)
+
+	// level.AddEntity(oceMe)
+	// level.AddEntity(oceOp)
+	// level.AddEntity(shpInf)
 
 	// shpL := sgame.NewShip(11, 16, sgame.OriR, sgame.FourMast)
 	// shpL.SetFocus(true)

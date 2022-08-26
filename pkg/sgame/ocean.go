@@ -62,7 +62,8 @@ func (o *Ocean) initialize() {
 	o.initialized = true
 }
 
-func (o *Ocean) Tick(ev tl.Event) {}
+func (o *Ocean) Tick(ev tl.Event) {
+}
 
 func (o *Ocean) Definition() (int, int, int, int) {
 	return o.x, o.y, o.x + OceanSize + 1, o.y + OceanSize + 1

@@ -46,43 +46,59 @@ func (t *Table) Draw(s *tl.Screen) {
 	}
 
 	t.dep.SetSize(ships[t.i], 1)
-	t.next.SetSize(ships[t.i+1], 1)
-}
 
-func (t *Table) Tick(ev tl.Event) {
-	if ev.Type == tl.EventKey {
-		switch ev.Key {
-		case tl.KeyEnter:
-			t.ocean.AddShip(ShipSize(ships[t.i]))
-			t.i += 1
-		}
+	if t.i+1 < len(ships) {
+		t.next.SetSize(ships[t.i+1], 1)
 	}
 }
 
+func (t *Table) Tick(ev tl.Event) {
+	// 	if ev.Type == tl.EventKey {
+	// 		switch ev.Key {
+	// 		case tl.KeyEnter:
+	// 			t.ocean.AddShip(ShipSize(ships[t.i]))
+	// 			t.i += 1
+	// 		}
+	// 	}
+}
+
+func (t *Table) GetShip() ShipSize {
+	i := t.i
+	if len(ships)-1 == i {
+		return ShipSize(0)
+	}
+
+	if i < len(ships)-1 {
+		t.i++
+	}
+
+	return ShipSize(ships[i])
+}
+
 func (t *Table) initialize(s *tl.Screen) {
-	t.dep = tl.NewRectangle(t.x+7, t.y+3, ships[t.i], 1, tl.ColorBlue)
-	s.AddEntity(t.dep)
-
-	t.next = tl.NewRectangle(t.x+7, t.y+6, ships[t.i+1], 1, tl.ColorBlue)
-	s.AddEntity(t.next)
-
 	top := NewBar(t.x, t.y, TableWidth, OriR, tl.ColorWhite, frameCol)
 	s.AddEntity(top)
 
 	right := NewBar(t.x+17, t.y, TableSize, OriD, tl.ColorWhite, frameCol)
 	s.AddEntity(right)
 
-	depTxt := NewText(t.x+2, t.y+2, "NOW DEPLOYING:", OriR, tl.ColorWhite, tl.ColorBlack)
-	s.AddEntity(depTxt)
-
-	nextTxt := NewText(t.x+4, t.y+5, "NEXT SHIP:", OriR, tl.ColorWhite, tl.ColorBlack)
-	s.AddEntity(nextTxt)
-
 	left := NewBar(t.x, t.y, TableSize, OriD, tl.ColorWhite, frameCol)
 	s.AddEntity(left)
 
 	bottom := NewBar(t.x, t.y+9, TableWidth, OriR, tl.ColorWhite, frameCol)
 	s.AddEntity(bottom)
+
+	depTxt := NewText(t.x+2, t.y+2, "NOW DEPLOYING:", OriR, tl.ColorWhite, tl.ColorBlack)
+	s.AddEntity(depTxt)
+
+	t.dep = tl.NewRectangle(t.x+7, t.y+3, ships[t.i], 1, tl.ColorBlue)
+	s.AddEntity(t.dep)
+
+	nextTxt := NewText(t.x+4, t.y+5, "NEXT SHIP:", OriR, tl.ColorWhite, tl.ColorBlack)
+	s.AddEntity(nextTxt)
+
+	t.next = tl.NewRectangle(t.x+7, t.y+6, ships[t.i+1], 1, tl.ColorBlue)
+	s.AddEntity(t.next)
 
 	t.initialized = true
 }
