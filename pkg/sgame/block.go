@@ -257,6 +257,20 @@ func (blk *Block) Collide(collision tl.Physical) {
 			blk.ori = blk.prevOri
 		}
 	}
+
+	if other, ok := collision.(*Block); ok {
+		if !other.solid {
+			return
+		}
+
+		op1x, op1y, op2x, op2y := other.Definition()
+		if IsInside(op1x, op1y, op2x, op2y, bp1x, bp1y) == false ||
+			IsInside(op1x, op1y, op2x, op2y, bp2x, bp2y) == false {
+			other.x = other.prevX
+			other.y = other.prevY
+			other.ori = other.prevOri
+		}
+	}
 }
 
 func (blk *Block) Definition() (int, int, int, int) {

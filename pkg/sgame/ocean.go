@@ -48,7 +48,7 @@ func (o *Ocean) Draw(s *tl.Screen) {
 	}
 
 	for _, shp := range o.shipsToAdd {
-		s.AddEntity(shp)
+		s.Level().AddEntity(shp)
 		o.ships = append(o.ships, shp)
 	}
 	o.shipsToAdd = o.shipsToAdd[:0]
