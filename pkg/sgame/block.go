@@ -267,10 +267,10 @@ func (blk *Block) Definition() (int, int, int, int) {
 	var p1x, p1y, p2x, p2y int
 	switch blk.ori {
 	case OriR:
-		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w, blk.y+h-1
+		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w-1, blk.y+h-1
 
 	case OriD:
-		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w-1, blk.y+h
+		p1x, p1y, p2x, p2y = blk.x, blk.y, blk.x+w-1, blk.y+h-1
 	}
 
 	return p1x, p1y, p2x, p2y

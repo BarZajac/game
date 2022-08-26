@@ -38,7 +38,7 @@ func main() {
 	oceMe := sgame.NewOcean(0, 0)
 	oceOp := sgame.NewOcean(50, 14)
 
-	shpL := sgame.NewShip(5, 4, sgame.OriU, sgame.FourMast)
+	shpL := sgame.NewShip(51, 15, sgame.OriR, sgame.FourMast)
 
 	level := tl.NewBaseLevel(tl.Cell{
 		Bg: tl.ColorBlack,
