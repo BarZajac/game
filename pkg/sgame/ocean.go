@@ -11,6 +11,15 @@ var frameCol = tl.RgbTo256Color(90, 90, 90)
 type Ocean struct {
 	x int
 	y int
+
+	topF    *Block
+	rightF  *Block
+	leftF   *Block
+	bottomF *Block
+
+	ships       []*Block
+	shipsToAdd  []*Block
+	initialized bool
 }
 
 func (o *Ocean) Position() (int, int) {
@@ -30,19 +39,41 @@ func NewOcean(x, y int) *Ocean {
 }
 
 func (o *Ocean) Draw(s *tl.Screen) {
-	txtTop := NewText(o.x, o.y, " 0123456789", OriR, tl.ColorWhite, frameCol)
-	right := NewBar(o.x+OceanSize+1, o.y, OceanSize+2, OriD, tl.ColorWhite, frameCol)
-	bottom := NewBar(o.x, o.y+OceanSize+1, OceanSize+1, OriR, tl.ColorWhite, frameCol)
-	txtLeft := NewText(o.x, o.y+1, "ABCDEFGHIJ", OriD, tl.ColorWhite, frameCol)
+	if !o.initialized {
+		o.initialize()
+		s.AddEntity(o.topF)
+		s.AddEntity(o.rightF)
+		s.AddEntity(o.bottomF)
+		s.AddEntity(o.leftF)
+	}
 
-	s.AddEntity(txtTop)
-	s.AddEntity(right)
-	s.AddEntity(bottom)
-	s.AddEntity(txtLeft)
+	for _, shp := range o.shipsToAdd {
+		s.AddEntity(shp)
+		o.ships = append(o.ships, shp)
+	}
+	o.shipsToAdd = o.shipsToAdd[:0]
 }
 
-func (o *Ocean) Tick(_ tl.Event) {}
+func (o *Ocean) initialize() {
+	o.topF = NewText(o.x, o.y, " 0123456789", OriR, tl.ColorWhite, frameCol)
+	o.rightF = NewBar(o.x+OceanSize+1, o.y, OceanSize+2, OriD, tl.ColorWhite, frameCol)
+	o.bottomF = NewBar(o.x, o.y+OceanSize+1, OceanSize+1, OriR, tl.ColorWhite, frameCol)
+	o.leftF = NewText(o.x, o.y+1, "ABCDEFGHIJ", OriD, tl.ColorWhite, frameCol)
+	o.initialized = true
+}
+
+func (o *Ocean) Tick(ev tl.Event) {}
 
 func (o *Ocean) Definition() (int, int, int, int) {
 	return o.x, o.y, o.x + OceanSize + 1, o.y + OceanSize + 1
+}
+
+func (o *Ocean) AddShip(size ShipSize) {
+	for _, shp := range o.ships {
+		shp.SetFocus(false)
+	}
+
+	shp := NewShip(o.x+1, o.y+1, OriR, size)
+	shp.SetFocus(true)
+	o.shipsToAdd = append(o.shipsToAdd, shp)
 }

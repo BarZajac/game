@@ -46,6 +46,7 @@ type Block struct {
 	canvas  []tl.Cell
 	locked  bool
 	solid   bool
+	focused bool
 }
 
 // NewShip  returns new instance of a Ship.
@@ -74,7 +75,9 @@ func NewShip(x, y int, ori Orientation, size ShipSize) *Block {
 		prevOri: ori,
 		text:    str,
 		canvas:  c,
+		locked:  false,
 		solid:   true,
+		focused: false,
 	}
 }
 
@@ -97,6 +100,7 @@ func NewText(x, y int, text string, ori Orientation, fg, bg tl.Attr) *Block {
 		canvas:  c,
 		locked:  true,
 		solid:   true,
+		focused: false,
 	}
 }
 
@@ -120,11 +124,16 @@ func NewBar(x, y, width int, ori Orientation, fg, bg tl.Attr) *Block {
 		canvas:  c,
 		locked:  true,
 		solid:   true,
+		focused: false,
 	}
 }
 
+func (blk *Block) SetFocus(v bool) {
+	blk.focused = v
+}
+
 func (blk *Block) Tick(ev tl.Event) {
-	if blk.locked {
+	if blk.locked || !blk.focused {
 		return
 	}
 
@@ -145,8 +154,6 @@ func (blk *Block) Tick(ev tl.Event) {
 		case tl.KeyPgup:
 			w, h := blk.Size()
 			x, y, ori = nextOri(blk.x, blk.y, w, h, blk.ori, RotCCW)
-
-		case tl.KeySpace:
 
 		case tl.KeyArrowRight:
 			x += 1
