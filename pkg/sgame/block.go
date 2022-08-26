@@ -29,8 +29,8 @@ type RotDir int
 
 // Rotation directions.
 const (
-	RotL RotDir = -1
-	RotR RotDir = 1
+	RotCCW RotDir = -1
+	RotCW  RotDir = 1
 )
 
 type Block struct {
@@ -140,11 +140,11 @@ func (blk *Block) Tick(ev tl.Event) {
 
 		case tl.KeyPgdn:
 			w, h := blk.Size()
-			x, y, ori = nextOri(blk.x, blk.y, w, h, RotR)
+			x, y, ori = nextOri(blk.x, blk.y, w, h, blk.ori, RotCW)
 
 		case tl.KeyPgup:
 			w, h := blk.Size()
-			x, y, ori = nextOri(blk.x, blk.y, w, h, RotL)
+			x, y, ori = nextOri(blk.x, blk.y, w, h, blk.ori, RotCCW)
 
 		case tl.KeySpace:
 
@@ -276,7 +276,21 @@ func (blk *Block) Definition() (int, int, int, int) {
 	return p1x, p1y, p2x, p2y
 }
 
-func nextOri(px, py, w, h int, dir RotDir) (int, int, Orientation) {
+func nextOri(px, py, w, h int, ori Orientation, dir RotDir) (int, int, Orientation) {
+	switch ori {
+	case OriR:
+		if dir == RotCW {
+			return px, py, OriD
+		}
+		return px, py - w + 1, OriD
+
+	case OriD:
+		if dir == RotCW {
+			return px, py + h - 1, OriR
+		}
+		return px, py, OriR
+	}
+
 	return 0, 0, OriR
 }
 

@@ -8,33 +8,34 @@ func Test_nextOri(t *testing.T) {
 	tt := []struct {
 		testN string
 
-		curr Orientation
-		rot  RotDir
-		exp  Orientation
+		x, y       int
+		w, h       int
+		ori        Orientation
+		dir        RotDir
+		expX, expY int
+		expOri     Orientation
 	}{
-		{"1", OriU, RotR, OriR},
-		{"2", OriR, RotR, OriD},
-		{"3", OriD, RotR, OriL},
-		{"4", OriL, RotR, OriU},
-
-		{"5", OriU, RotL, OriL},
-		{"6", OriL, RotL, OriD},
-		{"7", OriD, RotL, OriR},
-		{"8", OriR, RotL, OriU},
-
-		{"9", Orientation('Z'), RotR, Orientation('Z')},
-		{"10", Orientation('Z'), RotL, Orientation('Z')},
+		{"1", 0, 0, 4, 1, OriR, RotCW, 0, 0, OriD},
+		{"2", 10, 10, 4, 1, OriR, RotCW, 10, 10, OriD},
+		{"3", 11, 10, 4, 1, OriR, RotCCW, 11, 7, OriD},
+		{"4", 11, 7, 1, 4, OriD, RotCW, 11, 10, OriR},
 	}
 
 	for _, tc := range tt {
 		tc := tc
 		t.Run(tc.testN, func(t *testing.T) {
 			// --- When ---
-			got := nextOri(tc.curr, tc.rot)
+			gotX, gotY, gotOri := nextOri(tc.x, tc.y, tc.w, tc.h, tc.ori, tc.dir)
 
 			// --- Then ---
-			if got != tc.exp {
-				t.Errorf("expected %s got %s", string(tc.exp), string(got))
+			if gotX != tc.expX {
+				t.Errorf("expected x %d got %d", tc.expX, gotX)
+			}
+			if gotY != tc.expY {
+				t.Errorf("expected y %d got %d", tc.expY, gotY)
+			}
+			if gotOri != tc.expOri {
+				t.Errorf("expected ori %s got %s", string(tc.expOri), string(gotOri))
 			}
 		})
 	}
