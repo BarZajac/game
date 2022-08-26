@@ -281,9 +281,10 @@ func nextOri(px, py, w, h int, ori Orientation, dir RotDir) (int, int, Orientati
 			// Rotation not allowed.
 			return px, py, ori
 		}
+		return px, py, OriR
 	}
 
-	return px, py, OriR
+	return px, py, ori
 }
 
 func IsInside(p1x, p1y, p2x, p2y, p3x, p3y int) bool {
