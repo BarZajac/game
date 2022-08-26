@@ -35,7 +35,7 @@ func main() {
 	game.SetDebugOn(true)
 	sgame.Glog = game.Log
 
-	oceMe := sgame.NewOcean(0, 0)
+	oceMe := sgame.NewOcean(10, 14)
 	oceOp := sgame.NewOcean(50, 14)
 
 	shpL := sgame.NewShip(53, 19, sgame.OriR, sgame.FourMast)

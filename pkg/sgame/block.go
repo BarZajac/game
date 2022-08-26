@@ -240,18 +240,9 @@ func (blk *Block) Collide(collision tl.Physical) {
 	if !blk.solid {
 		return
 	}
-
 	bp1x, bp1y, bp2x, bp2y := blk.Definition()
-
-	// Check if it's a Rectangle we're colliding with
 	if o, ok := collision.(*Ocean); ok {
 		op1x, op1y, op2x, op2y := o.Definition()
-
-		// if !IsInside(op1x, op1y, op2x, op2y, bp1x, bp1y)  ||
-		// 	!IsInside(op1x, op1y, op2x, op2y, bp2x, bp2y) {
-		// ...
-		// 	}
-
 		if IsInside(op1x, op1y, op2x, op2y, bp1x, bp1y) == false ||
 			IsInside(op1x, op1y, op2x, op2y, bp2x, bp2y) == false {
 			blk.x = blk.prevX
@@ -282,11 +273,11 @@ func nextOri(px, py, w, h int, ori Orientation, dir RotDir) (int, int, Orientati
 		if dir == RotCW {
 			return px, py, OriD
 		}
-		return px, py - w + 1, OriD
+		return px, py, ori
 
 	case OriD:
 		if dir == RotCW {
-			return px, py + h - 1, OriR
+			return px, py, ori
 		}
 		return px, py, OriR
 	}
